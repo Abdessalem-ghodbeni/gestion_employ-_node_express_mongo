@@ -85,3 +85,37 @@ export const recupereAllTask = async (req, res) => {
     });
   }
 };
+
+export const deletetache = async (req, res) => {
+  try {
+    const tacheId = req.params.id;
+    if (!ObjectId.isValid(tacheId)) {
+      return res.status(500).send({
+        succes: 500,
+        message: "id is not valid ",
+      });
+    }
+    const tacheDeleted = await tacheModel.findById(tacheId);
+    if (!tacheDeleted) {
+      return res.status(404).send({
+        succes: false,
+        message: "tache non trouvable avec cet id ",
+      });
+    }
+    const tacheIsDeleted = await tacheModel.deleteOne({ _id: tacheId });
+    if (tacheIsDeleted.deletedCount === 1) {
+      res.status(200).send({
+        succes: true,
+        message: "tache deleted successfully",
+        tacheIsDeleted,
+      });
+    }
+  } catch (error) {
+    console.log(error),
+      res.status(500).send({
+        succes: false,
+        message: "une chose mal passé lors de supression de tache",
+        error,
+      });
+  }
+};
