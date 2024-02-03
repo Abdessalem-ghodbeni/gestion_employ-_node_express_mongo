@@ -17,6 +17,12 @@ const employeSchema = mongoose.Schema(
       type: String,
       unique: true,
     },
+    taches: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Taches",
+      },
+    ],
   },
   {
     timestamps: true, //add createdAt and updatedAt fields automatically

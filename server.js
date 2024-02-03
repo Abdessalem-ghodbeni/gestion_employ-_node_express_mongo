@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cors from "cors";
 import connectDb from "./config/db.js";
 import employeRouter from "./Routes/employe.routes.js";
+import tacheRouter from "./Routes/tache.routes.js";
 
 //initialisation d'expreess app
 const application = exrpress();
@@ -19,6 +20,7 @@ const Port = process.env.PORT || 5080;
 connectDb();
 
 application.use("/employe", employeRouter);
+application.use("/taches", tacheRouter);
 
 application.listen(Port, () => {
   console.log(
