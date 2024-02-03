@@ -1,5 +1,5 @@
 import tacheModel from "../models/taches.model.js";
-import ObjectId from "mongodb";
+import { ObjectId } from "mongodb";
 
 export const ajouterTache = async (req, res) => {
   try {
@@ -26,6 +26,62 @@ export const ajouterTache = async (req, res) => {
     res.status(500).send({
       succes: false,
       message: "somthing was warrning in added tache",
+    });
+  }
+};
+
+export const recupererTachesById = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    if (!ObjectId.isValid(taskId)) {
+      return res.status(500).send({
+        succes: false,
+        message: "id est non valid ",
+      });
+    }
+
+    const taskedById = await tacheModel.findById(taskId);
+    if (!taskedById) {
+      return res.status(404).send({
+        succes: false,
+        message: `tache avec id = ${taskId} est introuvable`,
+      });
+    }
+
+    res.status(200).send({
+      succes: true,
+      message: "tache recuperer avec succes",
+      taskedById,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      succes: false,
+      message: "une chose mal passé lors de recuperation d'une tache ",
+    });
+  }
+};
+
+export const recupereAllTask = async (req, res) => {
+  try {
+    const ListeOfTasck = await tacheModel.find();
+    if (ListeOfTasck.length === 0) {
+      return res.status(200).send({
+        succes: true,
+        message: "accun tache trouvé,liste vide ",
+        ListeOfTasck,
+      });
+    }
+    res.status(200).send({
+      succes: true,
+      message: "liste recupeérée avec succes",
+      ListeOfTasck,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      succes: false,
+      message: "somthing was warning",
     });
   }
 };
