@@ -261,3 +261,45 @@ export const affecterTacheToemploye = async (req, res) => {
     });
   }
 };
+
+export const RecupererLesTachesDeEmploye = async (req, res) => {
+  try {
+    const id_employe = req.params.id;
+    if (!ObjectId.isValid(id_employe)) {
+      return res.status(500).send({
+        succes: false,
+        message: "invalid id ",
+      });
+    }
+    const employe = await employeModel.findById(id_employe);
+    if (!employe) {
+      return res.status(404).send({
+        succes: false,
+        message: "employe non trouvable",
+      });
+    }
+    if (employe.taches.length === 0) {
+      return res.status(200).send({
+        succes: true,
+        message: "encore...accune tache affectée pour le moments",
+      });
+    }
+    const liste_des_taches = [];
+    for (let i = 0; i < employe.taches.length; i++) {
+      const tacheAffectedDetails = await tacheModel.findById(employe.taches[i]);
+      liste_des_taches.push(tacheAffectedDetails);
+    }
+    res.status(200).send({
+      succes: true,
+      message: "ceci la liste des taches affectées a cet employé",
+      liste_des_taches,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      succes: false,
+      message:
+        "une chose mal passé lors de recuperation de liste des taches de cet employé",
+    });
+  }
+};
