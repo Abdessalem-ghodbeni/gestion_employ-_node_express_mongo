@@ -119,3 +119,39 @@ export const deletetache = async (req, res) => {
       });
   }
 };
+
+export const modifierTache = async (req, res) => {
+  try {
+    const id_tache = req.params.id;
+    const tacheUpdated = req.body;
+    if (!ObjectId.isValid(id_tache)) {
+      return res.status(500).send({
+        succes: false,
+        message: "id is not valid",
+      });
+    }
+    const UpdateTache = await tacheModel.findOneAndUpdate(
+      { _id: id_tache },
+      { $set: tacheUpdated },
+      { new: true }
+    );
+    if (!UpdateTache) {
+      return res.status(404).send({
+        succes: false,
+        message: "accune tache trouve avec cet id ",
+      });
+    }
+    res.status(200).send({
+      succes: true,
+      message: "tache updated successfully",
+      UpdateTache,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      succes: false,
+      message: "une chose mal passé lors d'update une tache",
+      error,
+    });
+  }
+};
