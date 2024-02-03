@@ -1,6 +1,7 @@
 import express from "express";
 import {
   AddEmploye,
+  affecterTacheToemploye,
   deleteEmployeController,
   getAllEmploye,
   getEmployeById,
@@ -14,5 +15,6 @@ router.delete("/delete/employe/:id", deleteEmployeController);
 router.get("/retrive/:id", getEmployeById);
 router.get("/retrive", getAllEmploye);
 router.put("/update/:id", updateEmployeController);
+router.put("/affecter/tache/:id_tache/:id_employe", affecterTacheToemploye);
 
 export default router;

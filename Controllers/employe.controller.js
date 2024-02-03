@@ -1,5 +1,6 @@
 import employeModel from "../models/employe.model.js";
 import { ObjectId } from "mongodb";
+import tacheModel from "../models/taches.model.js";
 export const AddEmploye = async (req, res) => {
   try {
     const { name, prenom, age, email } = req.body;
@@ -203,6 +204,60 @@ export const updateEmployeController = async (req, res) => {
       message:
         "Quelque chose s'est mal passé lors de la mise à jour de l'employé",
       error,
+    });
+  }
+};
+
+export const affecterTacheToemploye = async (req, res) => {
+  try {
+    // req.params.id_employe;req.params.id_tache; doivent etre meme ecriture dans la route
+    const id_tache = req.params.id_tache;
+    const id_employe = req.params.id_employe;
+
+    if (!ObjectId.isValid(id_tache)) {
+      return res.status(500).send({
+        succes: false,
+        message: "id tache est non valid ",
+      });
+    }
+    if (!ObjectId.isValid(id_employe)) {
+      return res.status(500).send({
+        succes: false,
+        message: "id employe est non valide",
+      });
+    }
+
+    const employe = await employeModel.findById({ _id: id_employe });
+    const tache = await tacheModel.findById({ _id: id_tache });
+
+    if (!employe) {
+      return res.status(404).send({
+        succes: false,
+        message: "employe est non trouvable avec cet id ",
+      });
+    }
+
+    if (!tache) {
+      return res.status(404).send({
+        succes: false,
+        message: "tache est introuvable avec cet id ",
+      });
+    }
+
+    await employe.taches.push(tache);
+    await employe.save();
+
+    res.status(200).send({
+      succes: true,
+      message: "employe successfuly affected to task",
+      employe,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      succes: false,
+      message:
+        "Erreur s'est produit lors d'affectation d'un employe a une taches",
     });
   }
 };
