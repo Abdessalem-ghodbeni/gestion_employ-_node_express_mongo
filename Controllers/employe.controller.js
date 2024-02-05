@@ -106,7 +106,9 @@ export const getEmployeById = async (req, res) => {
 
 export const getAllEmploye = async (req, res) => {
   try {
-    const employes = await employeModel.find();
+    // avec find seulement il nous renvoie la liste contient seulement les id tandit que j'utilise populate elle renvoie l'objet avec toutes les informations
+    // const employes = await employeModel.find();
+    const employes = await employeModel.find().populate("taches");
     if (employes.length === 0) {
       return res.status(200).send({
         succes: true,
