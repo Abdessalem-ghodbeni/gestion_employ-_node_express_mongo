@@ -18,7 +18,11 @@ application.use(cors());
 const Port = process.env.PORT || 5080;
 //connect data base
 connectDb();
-
+application.use("/", (req, res) => {
+  res.json({
+    message: "hello wrod",
+  });
+});
 application.use("/employe", employeRouter);
 application.use("/taches", tacheRouter);
 
